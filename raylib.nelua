@@ -10,7 +10,7 @@ if ccinfo.is_windows then
     cflags  "-static"
 end
 if ccinfo.is_linux or ccinfo.is_gnu_linux then
-    linklib "Gl"
+    linklib "GL"
     linklib "m"
     linklib "dl"
     linklib "rt"
@@ -20,7 +20,7 @@ if ccinfo.is_macos then
     cflags "-framework OpenGL -framework Cocoa -framework IOKit -framework CoreAudio -framework CoreVideo"
 end
 if ccinfo.is_freebsd or ccinfo.is_netbsd or ccinfo.is_openbsd or ccinfo.is_bsd then
-    linklib "Gl"
+    linklib "GL"
     linklib "pthread"
     linklib "m"
 end
