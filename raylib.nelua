@@ -1,7 +1,4 @@
 ##[[
-    cinclude"raylib.h"
-    linklib "raylib"
-    cflags "-Wall -std=c99 -D_DEFAULT_SOURCE -Wno-missing-braces"
 if ccinfo.is_windows then
     linklib "opengl32"
     linklib "gdi32"
@@ -24,6 +21,8 @@ if ccinfo.is_freebsd or ccinfo.is_netbsd or ccinfo.is_openbsd or ccinfo.is_bsd t
     linklib "pthread"
     linklib "m"
 end
+    cinclude"raylib.h"
+    linklib "raylib"
 ]]
 
 global Vector2: type <cimport,nodecl> = @record{
