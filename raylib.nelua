@@ -1,4 +1,5 @@
 ##[[
+    linklib "raylib"
 if ccinfo.is_windows then
     linklib "opengl32"
     linklib "gdi32"
@@ -22,7 +23,6 @@ if ccinfo.is_freebsd or ccinfo.is_netbsd or ccinfo.is_openbsd or ccinfo.is_bsd t
     linklib "m"
 end
     cinclude"raylib.h"
-    linklib "raylib"
 ]]
 
 global Vector2: type <cimport,nodecl> = @record{
