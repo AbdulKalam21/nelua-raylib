@@ -25,87 +25,93 @@ end
     cinclude"raylib.h"
 ]]
 
-global Vector2: type <cimport,nodecl> = @record{
-    x: float32,
-    y: float32
+------------------------------------------------------------------------------------
+-- Structures Definition
+------------------------------------------------------------------------------------
+
+-- Vector2, 2 components
+global Vector2: type <cimport, nodecl> = @record{
+    x: float32,                                             -- Vector x component
+    y: float32                                              -- Vector y component
 }
 
-global Vector3: type <cimport,nodecl> = @record{
-    x: float32,
-    y: float32,
-    z: float32
+-- Vector3, 3 components
+global Vector3: type <cimport, nodecl> = @record{
+    x: float32,                                             -- Vector x component
+    y: float32,                                             -- Vector y component
+    z: float32                                              -- Vector z component
 }
 
-global Vector4: type <cimport,nodecl> = @record{
-    x: float32,
-    y: float32,
-    z: float32,
-    w: float32
+-- Vector4, 4 components
+global Vector4: type <cimport, nodecl> = @record{
+    x: float32,                                             -- Vector x component
+    y: float32,                                             -- Vector y component
+    z: float32,                                             -- Vector z component
+    w: float32                                              -- Vector w component
 }
 
+-- Quaternion, 4 components (Vector4 alias)
 global Quaternion: type = @Vector4
 
+-- Matrix, 4x4 components, column major, OpenGL style, right handed
 global Matrix: type <cimport,nodecl> = @record{
-    m0: float32,
-    m4: float32,
-    m8: float32,
-    m12: float32,
-    m1: float32,
-    m5: float32,
-    m9: float32,
-    m13: float32,
-    m2: float32,
-    m6: float32,
-    m10: float32,
-    m14: float32,
-    m3: float32,
-    m7: float32,
-    m11: float32,
-    m15: float32
+    m0: float32, m4: float32, m8: float32, m12: float32,    -- Matrix first row (4 components)
+    m1: float32, m5: float32, m9: float32, m13: float32,    -- Matrix second row (4 components)
+    m2: float32, m6: float32, m10: float32, m14: float32,   -- Matrix third row (4 components)
+    m3: float32, m7: float32, m11: float32, m15: float32    -- Matrix fourth row (4 components)
 }
 
-global Color: type <cimport,nodecl> = @record{
-    r: cuchar,
-    g: cuchar,
-    b: cuchar,
-    a: cuchar
+-- Color, 4 components, R8G8B8A8 (32bit)
+global Color: type <cimport, nodecl> = @record{
+    r: cuchar,                                              -- Color red value
+    g: cuchar,                                              -- Color green value
+    b: cuchar,                                              -- Color blue value
+    a: cuchar                                               -- Color alpha value
 }
 
+-- Rectangle, 4 components
 global Rectangle: type <cimport,nodecl> = @record{
-    x: float32,
-    y: float32,
-    width: float32,
-    height: float32
+    x: float32,                                             -- Rectangle top-left corner position x
+    y: float32,                                             -- Rectangle top-left corner position y
+    width: float32,                                         -- Rectangle width
+    height: float32                                         -- Rectangle height
 }
 
+-- Image, pixel data stored in CPU memory (RAM)
 global Image: type <cimport,nodecl> = @record{
-    data: pointer,
-    width: cint,
-    height: cint,
-    mipmaps: cint,
-    format: cint
+    data: pointer,                                          -- Image raw data
+    width: cint,                                            -- Image base width
+    height: cint,                                           -- Image base height
+    mipmaps: cint,                                          -- Mipmap levels, 1 by default
+    format: cint                                            -- Data format (PixelFormat type)
 }
 
+-- Texture, tex data stored in GPU memory (VRAM)
 global Texture: type <cimport,nodecl> = @record{
-    id: cuint,
-    width: cint,
-    height: cint,
-    mipmaps: cint,
-    format: cint
+    id: cuint,                                              -- OpenGL texture id
+    width: cint,                                            -- Texture base width
+    height: cint,                                           -- Texture base height
+    mipmaps: cint,                                          -- Mipmap levels, 1 by default
+    format: cuint                                           -- Data format (PixelFormat type)
 }
 
+-- Texture2D, same as Texture
 global Texture2D: type = @Texture
 
+-- TextureCubemap, same as Texture
 global TextureCubemap: type = @Texture
 
+-- RenderTexture, fbo for texture rendering
 global RenderTexture: type <cimport,nodecl> = @record{
-    id: cuint,
-    texture: Texture,
-    depth: Texture
+    id: cuint,                                              -- OpenGL framebuffer object id
+    texture: Texture,                                       -- Color buffer attachment texture
+    depth: Texture                                          -- Depth buffer attachment texture
 }
 
+-- RenderTexture2D, same as RenderTexture
 global RenderTexture2D: type = @RenderTexture
 
+-- NPatchInfo, n-patch layout info
 global NPatchInfo: type <cimport,nodecl> = @record{
     source: Rectangle,
     left: cint,
@@ -115,7 +121,8 @@ global NPatchInfo: type <cimport,nodecl> = @record{
     layout: cint
 }
 
-global CharInfo: type <cimport,nodecl> = @record{
+-- GlyphInfo, font characters glyphs info
+global GlyphInfo : type <cimport,nodecl> = @record{
     value: cint,
     offsetX: cint,
     offsetY: cint,
@@ -123,15 +130,17 @@ global CharInfo: type <cimport,nodecl> = @record{
     image: Image
 }
 
+-- Font, font texture and GlyphInfo array data
 global Font: type <cimport,nodecl> = @record{
     baseSize: cint,
-    charsCount: cint,
-    charsPadding: cint,
+    glyphCount: cint,
+    glyphPadding: cint,
     texture: Texture2D,
     recs: *Rectangle,
-    chars: *CharInfo
+    glyphs: *GlyphInfo
 }
 
+-- Camera, defines position/orientation in 3d space
 global Camera3D: type <cimport,nodecl> = @record{
     position: Vector3,
     target: Vector3,
@@ -140,8 +149,10 @@ global Camera3D: type <cimport,nodecl> = @record{
     projection: cint
 }
 
-global Camera: type = @Camera3D
 
+global Camera: type = @Camera3D -- Camera type fallback, defaults to Camera3D
+
+-- Camera2D, defines position/orientation in 2d space
 global Camera2D: type <cimport,nodecl> = @record{
     offset: Vector2,
     target: Vector2,
@@ -149,9 +160,11 @@ global Camera2D: type <cimport,nodecl> = @record{
     zoom: float32
 }
 
+-- Mesh, vertex data and vao/vbo
 global Mesh: type <cimport,nodecl> = @record{
     vertexCount: cint,
     triangleCount: cint,
+
     vertices: *float32,
     texcoords: *float32,
     texcoords2: *float32,
@@ -159,42 +172,50 @@ global Mesh: type <cimport,nodecl> = @record{
     tangents: *float32,
     colors: *cuchar,
     indices: *cushort,
+
     animVertices: *float32,
     animNormals: *float32,
     boneIds: *cint,
     boneWeights: *float32,
+
     vaoId: cuint,
     vboId: *cuint
 }
 
+-- Shader
 global Shader: type <cimport,nodecl> = @record{
     id: cuint,
     locs: *cint
 }
 
+-- MaterialMap
 global MaterialMap: type <cimport,nodecl> = @record{
     texture: Texture2D,
     color: Color,
     value: float32
 }
 
+-- Material, includes shader and maps
 global Material: type <cimport,nodecl> = @record{
     shader: Shader,
     maps: *MaterialMap,
     params: [4]float32
 }
 
+-- Transform, vectex transformation data
 global Transform: type <cimport,nodecl> = @record{
     translation: Vector3,
     rotation: Quaternion,
     scale: Vector3
 }
 
+-- Bone, skeletal animation bone
 global BoneInfo: type <cimport,nodecl> = @record{
     name: [32]cchar,
     parent: cint
 }
 
+-- Model, meshes, materials and animation data
 global Model: type <cimport,nodecl> = @record{
     transform: Matrix,
     meshCount: cint,
@@ -206,7 +227,8 @@ global Model: type <cimport,nodecl> = @record{
     bones: *BoneInfo,
     bindPose: *Transform
 }
-    
+
+-- ModelAnimation
 global ModelAnimation: type <cimport,nodecl> = @record{
     boneCount: cint,
     frameCount: cint,
@@ -214,25 +236,29 @@ global ModelAnimation: type <cimport,nodecl> = @record{
     framePoses: **Transform
 }
 
+-- Ray, ray for raycasting
 global Ray: type <cimport,nodecl> = @record{
     position: Vector3,
     direction: Vector3
 }
 
-global RayHitInfo: type <cimport,nodecl> = @record{
+-- RayCollision, ray hit information
+global RayCollision: type <cimport,nodecl> = @record{
     hit: boolean,
     distance: float32,
     position: Vector3,
     normal: Vector3
 }
 
+-- BoundingBox
 global BoundingBox: type <cimport,nodecl> = @record{
     min: Vector3,
     max: Vector3
 }
 
+-- Wave, audio wave data
 global Wave: type <cimport,nodecl> = @record{
-    sampleCount: cuint,
+    frameCount: cuint,
     sampleRate: cuint,
     sampleSize: cuint,
     channels: cuint,
@@ -241,18 +267,22 @@ global Wave: type <cimport,nodecl> = @record{
 
 global rAudioBuffer: type <cimport,nodecl,forwarddecl> = @record{}
 
+-- AudioStream, custom audio stream
 global AudioStream: type <cimport,nodecl> = @record{
     buffer: *rAudioBuffer,
+
     sampleRate: cuint,
     sampleSize: cuint,
     channels: cuint
 }
 
+-- Sound
 global Sound: type <cimport,nodecl> = @record{
     stream: AudioStream,
     ampleCount: cuint
 }
 
+-- Music, audio stream, anything longer than ~10 seconds should be streamed
 global Music: type <cimport,nodecl> = @record{
     stream: AudioStream,
     sampleCount: cuint,
@@ -261,6 +291,7 @@ global Music: type <cimport,nodecl> = @record{
     ctxData: pointer
 }
 
+-- VrDeviceInfo, Head-Mounted-Display device parameters
 global VrDeviceInfo: type <cimport,nodecl> = @record{
     hResolution: cint,
     vResolution: cint,
@@ -274,6 +305,7 @@ global VrDeviceInfo: type <cimport,nodecl> = @record{
     chromaAbCorrection: [4]float32
 }
 
+-- VrStereoConfig, VR stereo rendering configuration for simulator
 global VrStereoConfig: type <cimport,nodecl> = @record{
     projection: [2]Matrix,
     viewOffset: [2]Matrix,
@@ -284,6 +316,13 @@ global VrStereoConfig: type <cimport,nodecl> = @record{
     scale: [2]float32,
     scaleIn: [2]float32
 }
+
+------------------------------------------------------------------------------------
+-- Enumerators Definition
+------------------------------------------------------------------------------------
+-- System/Window config flags
+-- NOTE: Every bit registers one state (use it with bit masks)
+-- By default all flags are set to 0
 
 global ConfigFlags: type <cimport,nodecl,using> = @enum(cint){
     FLAG_VSYNC_HINT = 64,
@@ -302,6 +341,8 @@ global ConfigFlags: type <cimport,nodecl,using> = @enum(cint){
     FLAG_INTERLACED_HINT = 65536
 }
 
+-- Trace log level
+-- NOTE: Organized by priority level
 global TraceLogLevel: type <cimport,nodecl,using> = @enum(cint){
     LOG_ALL = 0,
     LOG_TRACE = 1,
@@ -313,6 +354,7 @@ global TraceLogLevel: type <cimport,nodecl,using> = @enum(cint){
     LOG_NONE = 7
 }
 
+-- Keyboard keys (US keyboard layout)
 global KeyboardKey: type <cimport,nodecl,using> = @enum(cint){
     KEY_NULL = 0,
     KEY_APOSTROPHE = 39,
@@ -426,12 +468,14 @@ global KeyboardKey: type <cimport,nodecl,using> = @enum(cint){
     KEY_VOLUME_DOWN = 25
 }
 
+-- Mouse buttons
 global MouseButton: type <cimport,nodecl,using> = @enum(cint){
     MOUSE_LEFT_BUTTON = 0,
     MOUSE_RIGHT_BUTTON = 1,
     MOUSE_MIDDLE_BUTTON = 2
 }
 
+-- Mouse cursor
 global MouseCursor: type <cimport,nodecl,using> = @enum(cint){
     MOUSE_CURSOR_DEFAULT = 0,
     MOUSE_CURSOR_ARROW = 1,
@@ -446,6 +490,7 @@ global MouseCursor: type <cimport,nodecl,using> = @enum(cint){
     MOUSE_CURSOR_NOT_ALLOWED = 10
 }
 
+-- Gamepad buttons
 global GamepadButton: type <cimport,nodecl,using> = @enum(cint){
     GAMEPAD_BUTTON_UNKNOWN = 0,
     GAMEPAD_BUTTON_LEFT_FACE_UP = 1,
@@ -467,6 +512,7 @@ global GamepadButton: type <cimport,nodecl,using> = @enum(cint){
     GAMEPAD_BUTTON_RIGHT_THUMB = 17
 }
 
+-- Gamepad axis
 global GamepadAxis: type <cimport,nodecl,using> = @enum(cint){
     GAMEPAD_AXIS_LEFT_X = 0,
     GAMEPAD_AXIS_LEFT_Y = 1,
@@ -476,6 +522,7 @@ global GamepadAxis: type <cimport,nodecl,using> = @enum(cint){
     GAMEPAD_AXIS_RIGHT_TRIGGER = 5
 }
 
+-- Material map index
 global MaterialMapIndex: type <cimport,nodecl,using> = @enum(cint){
     MATERIAL_MAP_ALBEDO = 0,
     MATERIAL_MAP_METALNESS = 1,
@@ -490,6 +537,7 @@ global MaterialMapIndex: type <cimport,nodecl,using> = @enum(cint){
     MATERIAL_MAP_PREFILTER = 10
 }
 
+-- Shader location index
 global ShaderLocationIndex: type <cimport,nodecl,using> = @enum(cint){
     SHADER_LOC_VERTEX_POSITION = 0,
     SHADER_LOC_VERTEX_TEXCOORD01 = 1,
@@ -519,6 +567,7 @@ global ShaderLocationIndex: type <cimport,nodecl,using> = @enum(cint){
     SHADER_LOC_MAP_BRDF = 25
 }
 
+-- Shader uniform data type
 global ShaderUniformDataType: type <cimport,nodecl,using> = @enum(cint){
     SHADER_UNIFORM_FLOAT = 0,
     SHADER_UNIFORM_VEC2 = 1,
@@ -531,6 +580,14 @@ global ShaderUniformDataType: type <cimport,nodecl,using> = @enum(cint){
     SHADER_UNIFORM_SAMPLER2D = 8
 }
 
+global ShaderAttribute: type <cimport, nodecl, using> = @enum(cint){
+    SHADER_ATTRIB_FLOAT = 0,
+    SHADER_ATTRIB_VEC2 = 1,
+    SHADER_ATTRIB_VEC3 = 2,
+    SHADER_ATTRIB_VEC4 = 3
+}
+
+-- Pixel formats
 global PixelFormat: type <cimport,nodecl,using> = @enum(cint){
     PIXELFORMAT_UNCOMPRESSED_GRAYSCALE = 1,
     PIXELFORMAT_UNCOMPRESSED_GRAY_ALPHA = 2,
@@ -555,6 +612,7 @@ global PixelFormat: type <cimport,nodecl,using> = @enum(cint){
     PIXELFORMAT_COMPRESSED_ASTC_8x8_RGBA = 21
 }
 
+-- Texture parameters: filter mode
 global TextureFilter: type <cimport,nodecl,using> = @enum(cint){
     TEXTURE_FILTER_POINT = 0,
     TEXTURE_FILTER_BILINEAR = 1,
@@ -564,6 +622,7 @@ global TextureFilter: type <cimport,nodecl,using> = @enum(cint){
     TEXTURE_FILTER_ANISOTROPIC_16X = 5
 }
 
+-- Texture parameters: wrap mode
 global TextureWrap: type <cimport,nodecl,using> = @enum(cint){
     TEXTURE_WRAP_REPEAT = 0,
     TEXTURE_WRAP_CLAMP = 1,
@@ -571,6 +630,7 @@ global TextureWrap: type <cimport,nodecl,using> = @enum(cint){
     TEXTURE_WRAP_MIRROR_CLAMP = 3
 }
 
+-- Cubemap layouts
 global CubemapLayout: type <cimport,nodecl,using> = @enum(cint){
     CUBEMAP_LAYOUT_AUTO_DETECT = 0,
     CUBEMAP_LAYOUT_LINE_VERTICAL = 1,
@@ -580,12 +640,14 @@ global CubemapLayout: type <cimport,nodecl,using> = @enum(cint){
     CUBEMAP_LAYOUT_PANORAMA = 5
 }
 
+-- Font type, defines generation method
 global FontType: type <cimport,nodecl,using> = @enum(cint){
     FONT_DEFAULT = 0,
     FONT_BITMAP = 1,
     FONT_SDF = 2
 }
 
+-- Color blending modes (pre-defined)
 global BlendMode: type <cimport,nodecl,using> = @enum(cint){
     BLEND_ALPHA = 0,
     BLEND_ADDITIVE = 1,
@@ -595,6 +657,7 @@ global BlendMode: type <cimport,nodecl,using> = @enum(cint){
     BLEND_CUSTOM = 5
 }
 
+-- Gesture
 global Gestures: type <cimport,nodecl,using> = @enum(cint){
     GESTURE_NONE = 0,
     GESTURE_TAP = 1,
@@ -609,6 +672,7 @@ global Gestures: type <cimport,nodecl,using> = @enum(cint){
     GESTURE_PINCH_OUT = 512
 }
 
+-- Camera system modes
 global CameraMode: type <cimport,nodecl,using> = @enum(cint){
     CAMERA_CUSTOM = 0,
     CAMERA_FREE = 1,
@@ -617,22 +681,29 @@ global CameraMode: type <cimport,nodecl,using> = @enum(cint){
     CAMERA_THIRD_PERSON = 4
 }
 
+-- Camera projection
 global CameraProjection: type <cimport,nodecl,using> = @enum(cint){
     CAMERA_PERSPECTIVE = 0,
     CAMERA_ORTHOGRAPHIC = 1
 }
 
+-- N-patch layout
 global NPatchLayout: type <cimport,nodecl,using> = @enum(cint){
     NPATCH_NINE_PATCH = 0,
     NPATCH_THREE_PATCH_VERTICAL = 1,
     NPATCH_THREE_PATCH_HORIZONTAL = 2
 }
 
+-- Callbacks to hook some internal functions
+-- WARNING: This callbacks are intended for advance users
 global TraceLogCallback: type <cimport,nodecl> = @function(cint, cstring, cvalist): void
 global LoadFileDataCallback: type <cimport,nodecl> = @function(cstring, *cuint): *cuchar
 global SaveFileDataCallback: type <cimport,nodecl> = @function(cstring, pointer, cuint): boolean
 global LoadFileTextCallback: type <cimport,nodecl> = @function(cstring): cstring
 global SaveFileTextCallback: type <cimport,nodecl> = @function(cstring, cstring): boolean
+
+
+-- Window-related functions
 global function InitWindow(width: cint, height: cint, title: cstring): void <cimport,nodecl> end
 global function WindowShouldClose(): boolean <cimport,nodecl> end
 global function CloseWindow(): void <cimport,nodecl> end
@@ -672,12 +743,23 @@ global function GetWindowScaleDPI(): Vector2 <cimport,nodecl> end
 global function GetMonitorName(monitor: cint): cstring <cimport,nodecl> end
 global function SetClipboardText(text: cstring): void <cimport,nodecl> end
 global function GetClipboardText(): cstring <cimport,nodecl> end
+
+-- Custom frame control functions
+-- NOTE: Those functions are intended for advance users that want full control over the frame processing
+-- By default EndDrawing() does this job: draws everything + SwapScreenBuffer() + manage frame timming + PollInputEvents()
+global function SwapScreenBuffer(): void <cimport, nodecl> end
+global function PollInputEvents(): void <cimport, nodecl> end
+global function WaitTime(ms: float32): void <cimport, nodecl> end
+
+-- Cursor-related functions
 global function ShowCursor(): void <cimport,nodecl> end
 global function HideCursor(): void <cimport,nodecl> end
 global function IsCursorHidden(): boolean <cimport,nodecl> end
 global function EnableCursor(): void <cimport,nodecl> end
 global function DisableCursor(): void <cimport,nodecl> end
 global function IsCursorOnScreen(): boolean <cimport,nodecl> end
+
+-- Drawing-related functions
 global function ClearBackground(color: Color): void <cimport,nodecl> end
 global function BeginDrawing(): void <cimport,nodecl> end
 global function EndDrawing(): void <cimport,nodecl> end
@@ -695,8 +777,13 @@ global function BeginScissorMode(x: cint, y: cint, width: cint, height: cint): v
 global function EndScissorMode(): void <cimport,nodecl> end
 global function BeginVrStereoMode(config: VrStereoConfig): void <cimport,nodecl> end
 global function EndVrStereoMode(): void <cimport,nodecl> end
+
+-- VR stereo config functions for VR simulator
 global function LoadVrStereoConfig(device: VrDeviceInfo): VrStereoConfig <cimport,nodecl> end
 global function UnloadVrStereoConfig(config: VrStereoConfig): void <cimport,nodecl> end
+
+-- Shader management functions
+-- NOTE: Shader functionality is not available on OpenGL 1.1
 global function LoadShader(vsFileName: cstring, fsFileName: cstring): Shader <cimport,nodecl> end
 global function LoadShaderFromMemory(vsCode: cstring, fsCode: cstring): Shader <cimport,nodecl> end
 global function GetShaderLocation(shader: Shader, uniformName: cstring): cint <cimport,nodecl> end
@@ -706,6 +793,8 @@ global function SetShaderValueV(shader: Shader, locIndex: cint, value: pointer, 
 global function SetShaderValueMatrix(shader: Shader, locIndex: cint, mat: Matrix): void <cimport,nodecl> end
 global function SetShaderValueTexture(shader: Shader, locIndex: cint, texture: Texture2D): void <cimport,nodecl> end
 global function UnloadShader(shader: Shader): void <cimport,nodecl> end
+
+-- Screen-space-related functions
 global function GetMouseRay(mousePosition: Vector2, camera: Camera): Ray <cimport,nodecl> end
 global function GetCameraMatrix(camera: Camera): Matrix <cimport,nodecl> end
 global function GetCameraMatrix2D(camera: Camera2D): Matrix <cimport,nodecl> end
@@ -713,23 +802,35 @@ global function GetWorldToScreen(position: Vector3, camera: Camera): Vector2 <ci
 global function GetWorldToScreenEx(position: Vector3, camera: Camera, width: cint, height: cint): Vector2 <cimport,nodecl> end
 global function GetWorldToScreen2D(position: Vector2, camera: Camera2D): Vector2 <cimport,nodecl> end
 global function GetScreenToWorld2D(position: Vector2, camera: Camera2D): Vector2 <cimport,nodecl> end
+
+-- Timing-related functions
 global function SetTargetFPS(fps: cint): void <cimport,nodecl> end
 global function GetFPS(): cint <cimport,nodecl> end
 global function GetFrameTime(): float32 <cimport,nodecl> end
 global function GetTime(): float64 <cimport,nodecl> end
+
+-- Misc. functions
 global function GetRandomValue(min: cint, max: cint): cint <cimport,nodecl> end
+global function SetRandomSeed(seed: cuint): void <cimport, nodecl> end
 global function TakeScreenshot(fileName: cstring): void <cimport,nodecl> end
 global function SetConfigFlags(flags: cuint): void <cimport,nodecl> end
+
+
 global function TraceLog(logLevel: cint, text: cstring, ...: cvarargs): void <cimport,nodecl> end
 global function SetTraceLogLevel(logLevel: cint): void <cimport,nodecl> end
 global function MemAlloc(size: cint): pointer <cimport,nodecl> end
 global function MemRealloc(ptr: pointer, size: cint): pointer <cimport,nodecl> end
 global function MemFree(ptr: pointer): void <cimport,nodecl> end
+
+-- Set custom callbacks
+-- WARNING: Callbacks setup is intended for advance users
 global function SetTraceLogCallback(callback: TraceLogCallback): void <cimport,nodecl> end
 global function SetLoadFileDataCallback(callback: LoadFileDataCallback): void <cimport,nodecl> end
 global function SetSaveFileDataCallback(callback: SaveFileDataCallback): void <cimport,nodecl> end
 global function SetLoadFileTextCallback(callback: LoadFileTextCallback): void <cimport,nodecl> end
 global function SetSaveFileTextCallback(callback: SaveFileTextCallback): void <cimport,nodecl> end
+
+-- Files management functions
 global function LoadFileData(fileName: cstring, bytesRead: *cuint): *cuchar <cimport,nodecl> end
 global function UnloadFileData(data: *cuchar): void <cimport,nodecl> end
 global function SaveFileData(fileName: cstring, data: pointer, bytesToWrite: cuint): boolean <cimport,nodecl> end
@@ -752,11 +853,24 @@ global function IsFileDropped(): boolean <cimport,nodecl> end
 global function GetDroppedFiles(count: *cint): *cstring <cimport,nodecl> end
 global function ClearDroppedFiles(): void <cimport,nodecl> end
 global function GetFileModTime(fileName: cstring): clong <cimport,nodecl> end
+
+-- Compression/Encoding functionality
 global function CompressData(data: *cuchar, dataLength: cint, compDataLength: *cint): *cuchar <cimport,nodecl> end
 global function DecompressData(compData: *cuchar, compDataLength: cint, dataLength: *cint): *cuchar <cimport,nodecl> end
+global function EncodeDataBase64(data: *cuchar, dataLength: cint, outputLength: *cint): *cchar <cimport, nodecl> end
+global function DecodeDataBase64(data: *cuchar, outputLength: *cint): *cuchar <cimport, nodecl> end
+
+-- Persistent storage management
 global function SaveStorageValue(position: cuint, value: cint): boolean <cimport,nodecl> end
 global function LoadStorageValue(position: cuint): cint <cimport,nodecl> end
+
 global function OpenURL(url: cstring): void <cimport,nodecl> end
+
+--------------------------------------------------------------------------------------
+-- Input Handling Functions (Module: core)
+--------------------------------------------------------------------------------------
+
+-- Input-related functions: keyboard
 global function IsKeyPressed(key: cint): boolean <cimport,nodecl> end
 global function IsKeyDown(key: cint): boolean <cimport,nodecl> end
 global function IsKeyReleased(key: cint): boolean <cimport,nodecl> end
@@ -764,8 +878,9 @@ global function IsKeyUp(key: cint): boolean <cimport,nodecl> end
 global function SetExitKey(key: cint): void <cimport,nodecl> end
 global function GetKeyPressed(): cint <cimport,nodecl> end
 global function GetCharPressed(): cint <cimport,nodecl> end
+
+-- Input-related functions: gamepads
 global function IsGamepadAvailable(gamepad: cint): boolean <cimport,nodecl> end
-global function IsGamepadName(gamepad: cint, name: cstring): boolean <cimport,nodecl> end
 global function GetGamepadName(gamepad: cint): cstring <cimport,nodecl> end
 global function IsGamepadButtonPressed(gamepad: cint, button: cint): boolean <cimport,nodecl> end
 global function IsGamepadButtonDown(gamepad: cint, button: cint): boolean <cimport,nodecl> end
@@ -775,6 +890,8 @@ global function GetGamepadButtonPressed(): cint <cimport,nodecl> end
 global function GetGamepadAxisCount(gamepad: cint): cint <cimport,nodecl> end
 global function GetGamepadAxisMovement(gamepad: cint, axis: cint): float32 <cimport,nodecl> end
 global function SetGamepadMappings(mappings: cstring): cint <cimport,nodecl> end
+
+-- Input-related functions: mouse
 global function IsMouseButtonPressed(button: cint): boolean <cimport,nodecl> end
 global function IsMouseButtonDown(button: cint): boolean <cimport,nodecl> end
 global function IsMouseButtonReleased(button: cint): boolean <cimport,nodecl> end
@@ -782,30 +899,52 @@ global function IsMouseButtonUp(button: cint): boolean <cimport,nodecl> end
 global function GetMouseX(): cint <cimport,nodecl> end
 global function GetMouseY(): cint <cimport,nodecl> end
 global function GetMousePosition(): Vector2 <cimport,nodecl> end
+global function GetMouseDelta(): Vector2 <cimport, nodecl> end
 global function SetMousePosition(x: cint, y: cint): void <cimport,nodecl> end
 global function SetMouseOffset(offsetX: cint, offsetY: cint): void <cimport,nodecl> end
 global function SetMouseScale(scaleX: float32, scaleY: float32): void <cimport,nodecl> end
 global function GetMouseWheelMove(): float32 <cimport,nodecl> end
 global function SetMouseCursor(cursor: cint): void <cimport,nodecl> end
+
+-- Input-related functions: touch
 global function GetTouchX(): cint <cimport,nodecl> end
 global function GetTouchY(): cint <cimport,nodecl> end
 global function GetTouchPosition(index: cint): Vector2 <cimport,nodecl> end
+global function GetTouchPointId(index: cint): cint <cimport, nodecl> end
+global function GetTouchPointsCount(): cint <cimport, nodecl> end
+
+--------------------------------------------------------------------------------------
+-- Gestures and Touch Handling Functions (Module: rgestures)
+--------------------------------------------------------------------------------------
 global function SetGesturesEnabled(flags: cuint): void <cimport,nodecl> end
 global function IsGestureDetected(gesture: cint): boolean <cimport,nodecl> end
 global function GetGestureDetected(): cint <cimport,nodecl> end
-global function GetTouchPointsCount(): cint <cimport,nodecl> end
 global function GetGestureHoldDuration(): float32 <cimport,nodecl> end
 global function GetGestureDragVector(): Vector2 <cimport,nodecl> end
 global function GetGestureDragAngle(): float32 <cimport,nodecl> end
 global function GetGesturePinchVector(): Vector2 <cimport,nodecl> end
 global function GetGesturePinchAngle(): float32 <cimport,nodecl> end
+
+--------------------------------------------------------------------------------------
+-- Camera System Functions (Module: rcamera)
+--------------------------------------------------------------------------------------
 global function SetCameraMode(camera: Camera, mode: cint): void <cimport,nodecl> end
 global function UpdateCamera(camera: *Camera): void <cimport,nodecl> end
+
 global function SetCameraPanControl(keyPan: cint): void <cimport,nodecl> end
 global function SetCameraAltControl(keyAlt: cint): void <cimport,nodecl> end
 global function SetCameraSmoothZoomControl(keySmoothZoom: cint): void <cimport,nodecl> end
 global function SetCameraMoveControls(keyFront: cint, keyBack: cint, keyRight: cint, keyLeft: cint, keyUp: cint, keyDown: cint): void <cimport,nodecl> end
+
+--------------------------------------------------------------------------------------
+-- Basic Shapes Drawing Functions (Module: shapes)
+--------------------------------------------------------------------------------------
+-- Set texture and rectangle to be used on shapes drawing
+-- NOTE: It can be useful when using basic shapes and one single font,
+-- defining a font char white rectangle would allow drawing everything in a single draw call
 global function SetShapesTexture(texture: Texture2D, source: Rectangle): void <cimport,nodecl> end
+
+-- Basic shapes drawing functions
 global function DrawPixel(posX: cint, posY: cint, color: Color): void <cimport,nodecl> end
 global function DrawPixelV(position: Vector2, color: Color): void <cimport,nodecl> end
 global function DrawLine(startPosX: cint, startPosY: cint, endPosX: cint, endPosY: cint, color: Color): void <cimport,nodecl> end
@@ -813,6 +952,7 @@ global function DrawLineV(startPos: Vector2, endPos: Vector2, color: Color): voi
 global function DrawLineEx(startPos: Vector2, endPos: Vector2, thick: float32, color: Color): void <cimport,nodecl> end
 global function DrawLineBezier(startPos: Vector2, endPos: Vector2, thick: float32, color: Color): void <cimport,nodecl> end
 global function DrawLineBezierQuad(startPos: Vector2, endPos: Vector2, controlPos: Vector2, thick: float32, color: Color): void <cimport,nodecl> end
+global function DrawLineBezierCubic(startPos: Vector2, endPos: Vector2, startControlPos: Vector2, endControlPos: Vector2): void <cimport, nodecl> end
 global function DrawLineStrip(points: *Vector2, pointsCount: cint, color: Color): void <cimport,nodecl> end
 global function DrawCircle(centerX: cint, centerY: cint, radius: float32, color: Color): void <cimport,nodecl> end
 global function DrawCircleSector(center: Vector2, radius: float32, startAngle: float32, endAngle: float32, segments: cint, color: Color): void <cimport,nodecl> end
@@ -841,6 +981,9 @@ global function DrawTriangleFan(points: *Vector2, pointsCount: cint, color: Colo
 global function DrawTriangleStrip(points: *Vector2, pointsCount: cint, color: Color): void <cimport,nodecl> end
 global function DrawPoly(center: Vector2, sides: cint, radius: float32, rotation: float32, color: Color): void <cimport,nodecl> end
 global function DrawPolyLines(center: Vector2, sides: cint, radius: float32, rotation: float32, color: Color): void <cimport,nodecl> end
+global function DrawPolyLinesEx(center: Vector2, sides: cint, radius: float32, rotation: float32, lineThick: float32, color: Color): void <cimport, nodecl> end
+
+-- Basic shapes collision detection functions
 global function CheckCollisionRecs(rec1: Rectangle, rec2: Rectangle): boolean <cimport,nodecl> end
 global function CheckCollisionCircles(center1: Vector2, radius1: float32, center2: Vector2, radius2: float32): boolean <cimport,nodecl> end
 global function CheckCollisionCircleRec(center: Vector2, radius: float32, rec: Rectangle): boolean <cimport,nodecl> end
@@ -848,22 +991,35 @@ global function CheckCollisionPointRec(point: Vector2, rec: Rectangle): boolean 
 global function CheckCollisionPointCircle(point: Vector2, center: Vector2, radius: float32): boolean <cimport,nodecl> end
 global function CheckCollisionPointTriangle(point: Vector2, p1: Vector2, p2: Vector2, p3: Vector2): boolean <cimport,nodecl> end
 global function CheckCollisionLines(startPos1: Vector2, endPos1: Vector2, startPos2: Vector2, endPos2: Vector2, collisionPoint: *Vector2): boolean <cimport,nodecl> end
+global function CheckCollisionPointLine(point: Vector2, p1: Vector2, p2: Vector2, threshold: cint): boolean <cimport, nodecl> end
 global function GetCollisionRec(rec1: Rectangle, rec2: Rectangle): Rectangle <cimport,nodecl> end
+
+--------------------------------------------------------------------------------------
+-- Texture Loading and Drawing Functions (Module: textures)
+--------------------------------------------------------------------------------------
+
+-- Image loading functions
+-- NOTE: This functions do not require GPU access
 global function LoadImage(fileName: cstring): Image <cimport,nodecl> end
 global function LoadImageRaw(fileName: cstring, width: cint, height: cint, format: cint, headerSize: cint): Image <cimport,nodecl> end
 global function LoadImageAnim(fileName: cstring, frames: *cint): Image <cimport,nodecl> end
 global function LoadImageFromMemory(fileType: cstring, fileData: *cuchar, dataSize: cint): Image <cimport,nodecl> end
+global function LoadImageFromTexture(texture: Texture2D): Image <cimport, nodecl> end
+global function LoadImageFromScreen(void): Image <cimport, nodecl> end
 global function UnloadImage(image: Image): void <cimport,nodecl> end
 global function ExportImage(image: Image, fileName: cstring): boolean <cimport,nodecl> end
 global function ExportImageAsCode(image: Image, fileName: cstring): boolean <cimport,nodecl> end
+
+-- Image generation functions
 global function GenImageColor(width: cint, height: cint, color: Color): Image <cimport,nodecl> end
 global function GenImageGradientV(width: cint, height: cint, top: Color, bottom: Color): Image <cimport,nodecl> end
 global function GenImageGradientH(width: cint, height: cint, left: Color, right: Color): Image <cimport,nodecl> end
 global function GenImageGradientRadial(width: cint, height: cint, density: float32, inner: Color, outer: Color): Image <cimport,nodecl> end
 global function GenImageChecked(width: cint, height: cint, checksX: cint, checksY: cint, col1: Color, col2: Color): Image <cimport,nodecl> end
 global function GenImageWhiteNoise(width: cint, height: cint, factor: float32): Image <cimport,nodecl> end
-global function GenImagePerlinNoise(width: cint, height: cint, offsetX: cint, offsetY: cint, scale: float32): Image <cimport,nodecl> end
 global function GenImageCellular(width: cint, height: cint, tileSize: cint): Image <cimport,nodecl> end
+
+-- Image manipulation functions
 global function ImageCopy(image: Image): Image <cimport,nodecl> end
 global function ImageFromImage(image: Image, rec: Rectangle): Image <cimport,nodecl> end
 global function ImageText(text: cstring, fontSize: cint, color: Color): Image <cimport,nodecl> end
@@ -895,6 +1051,10 @@ global function LoadImagePalette(image: Image, maxPaletteSize: cint, colorsCount
 global function UnloadImageColors(colors: *Color): void <cimport,nodecl> end
 global function UnloadImagePalette(colors: *Color): void <cimport,nodecl> end
 global function GetImageAlphaBorder(image: Image, threshold: float32): Rectangle <cimport,nodecl> end
+global function GetImageColor(image: Image, x: cint, y: cint): Color <cimport, nodecl> end
+
+-- Image drawing functions
+-- NOTE: Image software-rendering functions (CPU)s
 global function ImageClearBackground(dst: *Image, color: Color): void <cimport,nodecl> end
 global function ImageDrawPixel(dst: *Image, posX: cint, posY: cint, color: Color): void <cimport,nodecl> end
 global function ImageDrawPixelV(dst: *Image, position: Vector2, color: Color): void <cimport,nodecl> end
@@ -909,6 +1069,9 @@ global function ImageDrawRectangleLines(dst: *Image, rec: Rectangle, thick: cint
 global function ImageDraw(dst: *Image, src: Image, srcRec: Rectangle, dstRec: Rectangle, tint: Color): void <cimport,nodecl> end
 global function ImageDrawText(dst: *Image, text: cstring, posX: cint, posY: cint, fontSize: cint, color: Color): void <cimport,nodecl> end
 global function ImageDrawTextEx(dst: *Image, font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color): void <cimport,nodecl> end
+
+-- Texture loading functions
+-- NOTE: These functions require GPU access
 global function LoadTexture(fileName: cstring): Texture2D <cimport,nodecl> end
 global function LoadTextureFromImage(image: Image): Texture2D <cimport,nodecl> end
 global function LoadTextureCubemap(image: Image, layout: cint): TextureCubemap <cimport,nodecl> end
@@ -917,11 +1080,13 @@ global function UnloadTexture(texture: Texture2D): void <cimport,nodecl> end
 global function UnloadRenderTexture(target: RenderTexture2D): void <cimport,nodecl> end
 global function UpdateTexture(texture: Texture2D, pixels: pointer): void <cimport,nodecl> end
 global function UpdateTextureRec(texture: Texture2D, rec: Rectangle, pixels: pointer): void <cimport,nodecl> end
-global function GetTextureData(texture: Texture2D): Image <cimport,nodecl> end
-global function GetScreenData(): Image <cimport,nodecl> end
+
+-- Texture configuration functions
 global function GenTextureMipmaps(texture: *Texture2D): void <cimport,nodecl> end
 global function SetTextureFilter(texture: Texture2D, filter: cint): void <cimport,nodecl> end
 global function SetTextureWrap(texture: Texture2D, wrap: cint): void <cimport,nodecl> end
+
+-- Texture drawing functions
 global function DrawTexture(texture: Texture2D, posX: cint, posY: cint, tint: Color): void <cimport,nodecl> end
 global function DrawTextureV(texture: Texture2D, position: Vector2, tint: Color): void <cimport,nodecl> end
 global function DrawTextureEx(texture: Texture2D, position: Vector2, rotation: float32, scale: float32, tint: Color): void <cimport,nodecl> end
@@ -931,6 +1096,8 @@ global function DrawTextureTiled(texture: Texture2D, source: Rectangle, dest: Re
 global function DrawTexturePro(texture: Texture2D, source: Rectangle, dest: Rectangle, origin: Vector2, rotation: float32, tint: Color): void <cimport,nodecl> end
 global function DrawTextureNPatch(texture: Texture2D, nPatchInfo: NPatchInfo, dest: Rectangle, origin: Vector2, rotation: float32, tint: Color): void <cimport,nodecl> end
 global function DrawTexturePoly(texture: Texture2D, center: Vector2, points: *Vector2, texcoords: *Vector2, pointsCount: cint, tint: Color): void <cimport,nodecl> end
+
+-- Color/pixel related functions
 global function Fade(color: Color, alpha: float32): Color <cimport,nodecl> end
 global function ColorToInt(color: Color): cint <cimport,nodecl> end
 global function ColorNormalize(color: Color): Vector4 <cimport,nodecl> end
@@ -943,24 +1110,46 @@ global function GetColor(hexValue: cint): Color <cimport,nodecl> end
 global function GetPixelColor(srcPtr: pointer, format: cint): Color <cimport,nodecl> end
 global function SetPixelColor(dstPtr: pointer, color: Color, format: cint): void <cimport,nodecl> end
 global function GetPixelDataSize(width: cint, height: cint, format: cint): cint <cimport,nodecl> end
+
+--------------------------------------------------------------------------------------
+-- Font Loading and Text Drawing Functions (Module: text)
+--------------------------------------------------------------------------------------
+
+-- Font loading/unloading functions
 global function GetFontDefault(): Font <cimport,nodecl> end
 global function LoadFont(fileName: cstring): Font <cimport,nodecl> end
 global function LoadFontEx(fileName: cstring, fontSize: cint, fontChars: *cint, charsCount: cint): Font <cimport,nodecl> end
 global function LoadFontFromImage(image: Image, key: Color, firstChar: cint): Font <cimport,nodecl> end
 global function LoadFontFromMemory(fileType: cstring, fileData: *cuchar, dataSize: cint, fontSize: cint, fontChars: *cint, charsCount: cint): Font <cimport,nodecl> end
-global function LoadFontData(fileData: *cuchar, dataSize: cint, fontSize: cint, fontChars: *cint, charsCount: cint, type: cint): *CharInfo <cimport,nodecl> end
-global function GenImageFontAtlas(chars: *CharInfo, recs: **Rectangle, charsCount: cint, fontSize: cint, padding: cint, packMethod: cint): Image <cimport,nodecl> end
-global function UnloadFontData(chars: *CharInfo, charsCount: cint): void <cimport,nodecl> end
+global function LoadFontData(fileData: *cuchar, dataSize: cint, fontSize: cint, fontChars: *cint, charsCount: cint, type: cint): *GlyphInfo <cimport,nodecl> end
+global function GenImageFontAtlas(chars: *GlyphInfo, recs: **Rectangle, charsCount: cint, fontSize: cint, padding: cint, packMethod: cint): Image <cimport,nodecl> end
+global function UnloadFontData(chars: *GlyphInfo, charsCount: cint): void <cimport,nodecl> end
 global function UnloadFont(font: Font): void <cimport,nodecl> end
+
+-- Text drawing functions
 global function DrawFPS(posX: cint, posY: cint): void <cimport,nodecl> end
 global function DrawText(text: cstring, posX: cint, posY: cint, fontSize: cint, color: Color): void <cimport,nodecl> end
 global function DrawTextEx(font: Font, text: cstring, position: Vector2, fontSize: float32, spacing: float32, tint: Color): void <cimport,nodecl> end
-global function DrawTextRec(font: Font, text: cstring, rec: Rectangle, fontSize: float32, spacing: float32, wordWrap: boolean, tint: Color): void <cimport,nodecl> end
-global function DrawTextRecEx(font: Font, text: cstring, rec: Rectangle, fontSize: float32, spacing: float32, wordWrap: boolean, tint: Color, selectStart: cint, selectLength: cint, selectTint: Color, selectBackTint: Color): void <cimport,nodecl> end
+global function DrawTextPro(font: Font, text: cstring, position: Vector2, origin: Vector2, rotation: float32, fontSize: float32, spacing: float32, tint: Color): void <cimport, nodecl> end
 global function DrawTextCodepoint(font: Font, codepoint: cint, position: Vector2, fontSize: float32, tint: Color): void <cimport,nodecl> end
+
+-- Text font info functions
 global function MeasureText(text: cstring, fontSize: cint): cint <cimport,nodecl> end
 global function MeasureTextEx(font: Font, text: cstring, fontSize: float32, spacing: float32): Vector2 <cimport,nodecl> end
 global function GetGlyphIndex(font: Font, codepoint: cint): cint <cimport,nodecl> end
+global function GetGlyphInfo(font: Font, codepoint: cint): GlyphInfo <cimport, nodecl> end
+global function GetGlyphAtlasRec(font: Font, codepoint: cint): Rectangle <cimport, nodecl> end
+
+-- Text codepoints management functions (unicode characters)
+global function LoadCodepoints(text: cstring, count: *cint): cint <cimport, nodecl> end
+global function UnloadCodepoints(codepoints: *cint): void <cimport, nodecl> end
+global function GetCodepointsCount(text: cstring): cint <cimport, nodecl> end
+global function GetCodepoints(test: cstring, bytesProcessed: *cint): cint <cimport, nodecl> end
+global function CodepointToUTF8(codepoint: cint, byteSize: *cint): cstring <cimport, nodecl> end
+global function TextCodepointsToUTF8(codepoints: *cint, length:cint): cchar <cimport, nodecl> end
+
+-- Text strings management functions (no UTF-8 strings, only byte chars)
+-- NOTE: Some strings allocate memory internally for returned strings, just be careful!
 global function TextCopy(dst: cstring, src: cstring): cint <cimport,nodecl> end
 global function TextIsEqual(text1: cstring, text2: cstring): boolean <cimport,nodecl> end
 global function TextLength(text: cstring): cuint <cimport,nodecl> end
@@ -976,11 +1165,12 @@ global function TextToUpper(text: cstring): cstring <cimport,nodecl> end
 global function TextToLower(text: cstring): cstring <cimport,nodecl> end
 global function TextToPascal(text: cstring): cstring <cimport,nodecl> end
 global function TextToInteger(text: cstring): cint <cimport,nodecl> end
-global function TextToUtf8(codepoints: *cint, length: cint): cstring <cimport,nodecl> end
-global function GetCodepoints(text: cstring, count: *cint): *cint <cimport,nodecl> end
-global function GetCodepointsCount(text: cstring): cint <cimport,nodecl> end
-global function GetNextCodepoint(text: cstring, bytesProcessed: *cint): cint <cimport,nodecl> end
-global function CodepointToUtf8(codepoint: cint, byteLength: *cint): cstring <cimport,nodecl> end
+
+--------------------------------------------------------------------------------------
+-- Basic 3d Shapes Drawing Functions (Module: models)
+--------------------------------------------------------------------------------------
+
+-- Basic geometric 3D shapes drawing functions
 global function DrawLine3D(startPos: Vector3, endPos: Vector3, color: Color): void <cimport,nodecl> end
 global function DrawPoint3D(position: Vector3, color: Color): void <cimport,nodecl> end
 global function DrawCircle3D(center: Vector3, radius: float32, rotationAxis: Vector3, rotationAngle: float32, color: Color): void <cimport,nodecl> end
@@ -995,30 +1185,46 @@ global function DrawSphere(centerPos: Vector3, radius: float32, color: Color): v
 global function DrawSphereEx(centerPos: Vector3, radius: float32, rings: cint, slices: cint, color: Color): void <cimport,nodecl> end
 global function DrawSphereWires(centerPos: Vector3, radius: float32, rings: cint, slices: cint, color: Color): void <cimport,nodecl> end
 global function DrawCylinder(position: Vector3, radiusTop: float32, radiusBottom: float32, height: float32, slices: cint, color: Color): void <cimport,nodecl> end
+global function DrawCylinderEx(startPos: Vector3, endPos: Vector3, startRadius: float32, endRadius: float32, sides: cint, color: Color): void <cimport, nodecl> end
 global function DrawCylinderWires(position: Vector3, radiusTop: float32, radiusBottom: float32, height: float32, slices: cint, color: Color): void <cimport,nodecl> end
+global function DrawCylinderWiresEx(startPos: Vector3, endPos: Vector3, startRadius: float32, endRadius: float32, sides: cint, color: Color): void <cimport, nodecl> end
 global function DrawPlane(centerPos: Vector3, size: Vector2, color: Color): void <cimport,nodecl> end
 global function DrawRay(ray: Ray, color: Color): void <cimport,nodecl> end
 global function DrawGrid(slices: cint, spacing: float32): void <cimport,nodecl> end
+
+--------------------------------------------------------------------------------------
+-- Model 3d Loading and Drawing Functions (Module: models)
+--------------------------------------------------------------------------------------
+
+-- Model management functions
 global function LoadModel(fileName: cstring): Model <cimport,nodecl> end
 global function LoadModelFromMesh(mesh: Mesh): Model <cimport,nodecl> end
 global function UnloadModel(model: Model): void <cimport,nodecl> end
 global function UnloadModelKeepMeshes(model: Model): void <cimport,nodecl> end
+global function GetModelBoundingBox(model: Model): BoundingBox <cimport, nodecl> end
+
+-- Model drawing functions
+global function DrawModel(model: Model, position: Vector3, scale: float32, tint: Color): void <cimport,nodecl> end
+global function DrawModelEx(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: float32, scale: Vector3, tint: Color): void <cimport,nodecl> end
+global function DrawModelWires(model: Model, position: Vector3, scale: float32, tint: Color): void <cimport,nodecl> end
+global function DrawModelWiresEx(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: float32, scale: Vector3, tint: Color): void <cimport,nodecl> end
+global function DrawBoundingBox(box: BoundingBox, color: Color): void <cimport,nodecl> end
+global function DrawBillboard(camera: Camera, texture: Texture2D, center: Vector3, size: float32, tint: Color): void <cimport,nodecl> end
+global function DrawBillboardRec(camera: Camera, texture: Texture2D, source: Rectangle, center: Vector3, size: float32, tint: Color): void <cimport,nodecl> end
+global function DrawBillboardPro(camera: Camera, texture: Texture2D, source: Rectangle, position: Vector3, up: Vector3, size: Vector2, origin: Vector2, rotation: float32, tint: Color): void <cimport, nodecl> end
+
+-- Mesh management functions
 global function UploadMesh(mesh: *Mesh, dynamic: boolean): void <cimport,nodecl> end
 global function UpdateMeshBuffer(mesh: Mesh, index: cint, data: pointer, dataSize: cint, offset: cint): void <cimport,nodecl> end
+global function UnloadMesh(mesh: Mesh): void <cimport,nodecl> end
 global function DrawMesh(mesh: Mesh, material: Material, transform: Matrix): void <cimport,nodecl> end
 global function DrawMeshInstanced(mesh: Mesh, material: Material, transforms: *Matrix, instances: cint): void <cimport,nodecl> end
-global function UnloadMesh(mesh: Mesh): void <cimport,nodecl> end
 global function ExportMesh(mesh: Mesh, fileName: cstring): boolean <cimport,nodecl> end
-global function LoadMaterials(fileName: cstring, materialCount: *cint): *Material <cimport,nodecl> end
-global function LoadMaterialDefault(): Material <cimport,nodecl> end
-global function UnloadMaterial(material: Material): void <cimport,nodecl> end
-global function SetMaterialTexture(material: *Material, mapType: cint, texture: Texture2D): void <cimport,nodecl> end
-global function SetModelMeshMaterial(model: *Model, meshId: cint, materialId: cint): void <cimport,nodecl> end
-global function LoadModelAnimations(fileName: cstring, animsCount: *cint): *ModelAnimation <cimport,nodecl> end
-global function UpdateModelAnimation(model: Model, anim: ModelAnimation, frame: cint): void <cimport,nodecl> end
-global function UnloadModelAnimation(anim: ModelAnimation): void <cimport,nodecl> end
-global function UnloadModelAnimations(animations: *ModelAnimation, count: cuint): void <cimport,nodecl> end
-global function IsModelAnimationValid(model: Model, anim: ModelAnimation): boolean <cimport,nodecl> end
+global function GetMeshBoundingBox(mesh: Mesh): BoundingBox <cimport, nodecl> end
+global function GenMeshTangents(mesh: *Mesh): void <cimport, nodecl> end
+global function GenMeshBinormals(mesh: *Mesh): void <cimport, nodecl> end
+
+-- Mesh generation functions
 global function GenMeshPoly(sides: cint, radius: float32): Mesh <cimport,nodecl> end
 global function GenMeshPlane(width: float32, length: float32, resX: cint, resZ: cint): Mesh <cimport,nodecl> end
 global function GenMeshCube(width: float32, height: float32, length: float32): Mesh <cimport,nodecl> end
@@ -1029,30 +1235,42 @@ global function GenMeshTorus(radius: float32, size: float32, radSeg: cint, sides
 global function GenMeshKnot(radius: float32, size: float32, radSeg: cint, sides: cint): Mesh <cimport,nodecl> end
 global function GenMeshHeightmap(heightmap: Image, size: Vector3): Mesh <cimport,nodecl> end
 global function GenMeshCubicmap(cubicmap: Image, cubeSize: Vector3): Mesh <cimport,nodecl> end
-global function MeshBoundingBox(mesh: Mesh): BoundingBox <cimport,nodecl> end
-global function MeshTangents(mesh: *Mesh): void <cimport,nodecl> end
-global function MeshBinormals(mesh: *Mesh): void <cimport,nodecl> end
-global function DrawModel(model: Model, position: Vector3, scale: float32, tint: Color): void <cimport,nodecl> end
-global function DrawModelEx(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: float32, scale: Vector3, tint: Color): void <cimport,nodecl> end
-global function DrawModelWires(model: Model, position: Vector3, scale: float32, tint: Color): void <cimport,nodecl> end
-global function DrawModelWiresEx(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: float32, scale: Vector3, tint: Color): void <cimport,nodecl> end
-global function DrawBoundingBox(box: BoundingBox, color: Color): void <cimport,nodecl> end
-global function DrawBillboard(camera: Camera, texture: Texture2D, center: Vector3, size: float32, tint: Color): void <cimport,nodecl> end
-global function DrawBillboardRec(camera: Camera, texture: Texture2D, source: Rectangle, center: Vector3, size: float32, tint: Color): void <cimport,nodecl> end
+
+-- Material loading/unloading functions
+global function LoadMaterials(fileName: cstring, materialCount: *cint): *Material <cimport,nodecl> end
+global function LoadMaterialDefault(): Material <cimport,nodecl> end
+global function UnloadMaterial(material: Material): void <cimport,nodecl> end
+global function SetMaterialTexture(material: *Material, mapType: cint, texture: Texture2D): void <cimport,nodecl> end
+global function SetModelMeshMaterial(model: *Model, meshId: cint, materialId: cint): void <cimport,nodecl> end
+
+-- Model animations loading/unloading functions
+global function LoadModelAnimations(fileName: cstring, animsCount: *cint): *ModelAnimation <cimport,nodecl> end
+global function UpdateModelAnimation(model: Model, anim: ModelAnimation, frame: cint): void <cimport,nodecl> end
+global function UnloadModelAnimation(anim: ModelAnimation): void <cimport,nodecl> end
+global function UnloadModelAnimations(animations: *ModelAnimation, count: cuint): void <cimport,nodecl> end
+global function IsModelAnimationValid(model: Model, anim: ModelAnimation): boolean <cimport,nodecl> end
+
+-- Collision detection functions
 global function CheckCollisionSpheres(center1: Vector3, radius1: float32, center2: Vector3, radius2: float32): boolean <cimport,nodecl> end
 global function CheckCollisionBoxes(box1: BoundingBox, box2: BoundingBox): boolean <cimport,nodecl> end
 global function CheckCollisionBoxSphere(box: BoundingBox, center: Vector3, radius: float32): boolean <cimport,nodecl> end
-global function CheckCollisionRaySphere(ray: Ray, center: Vector3, radius: float32): boolean <cimport,nodecl> end
-global function CheckCollisionRaySphereEx(ray: Ray, center: Vector3, radius: float32, collisionPoint: *Vector3): boolean <cimport,nodecl> end
-global function CheckCollisionRayBox(ray: Ray, box: BoundingBox): boolean <cimport,nodecl> end
-global function GetCollisionRayMesh(ray: Ray, mesh: Mesh, transform: Matrix): RayHitInfo <cimport,nodecl> end
-global function GetCollisionRayModel(ray: Ray, model: Model): RayHitInfo <cimport,nodecl> end
-global function GetCollisionRayTriangle(ray: Ray, p1: Vector3, p2: Vector3, p3: Vector3): RayHitInfo <cimport,nodecl> end
-global function GetCollisionRayGround(ray: Ray, groundHeight: float32): RayHitInfo <cimport,nodecl> end
+global function GetRayCollisionSphere(box: BoundingBox, center: Vector3, radius: float32): RayCollision <cimport, nodecl> end
+global function GetRayCollisionBox(ray: Ray, box: BoundingBox): RayCollision <cimport, nodecl> end
+global function GetRayCollisionModel(ray: Ray, model: Model): RayCollision <cimport, nodecl> end
+global function GetRayCollisionTriangle(ray: Ray, p1: Vector3, p2: Vector3, p3: Vector3): RayCollision <cimport, nodecl> end
+global function GetRayCollisionQuad(ray: Ray, p1: Vector3, p2: Vector3, p3: Vector3, p4: Vector3): RayCollision <cimport, nodecl> end
+
+--------------------------------------------------------------------------------------
+-- Audio Loading and Playing Functions (Module: audio)
+--------------------------------------------------------------------------------------
+
+-- Audio device management functions
 global function InitAudioDevice(): void <cimport,nodecl> end
 global function CloseAudioDevice(): void <cimport,nodecl> end
 global function IsAudioDeviceReady(): boolean <cimport,nodecl> end
 global function SetMasterVolume(volume: float32): void <cimport,nodecl> end
+
+-- Wave/Sound loading/unloading functions
 global function LoadWave(fileName: cstring): Wave <cimport,nodecl> end
 global function LoadWaveFromMemory(fileType: cstring, fileData: *cuchar, dataSize: cint): Wave <cimport,nodecl> end
 global function LoadSound(fileName: cstring): Sound <cimport,nodecl> end
@@ -1062,6 +1280,8 @@ global function UnloadWave(wave: Wave): void <cimport,nodecl> end
 global function UnloadSound(sound: Sound): void <cimport,nodecl> end
 global function ExportWave(wave: Wave, fileName: cstring): boolean <cimport,nodecl> end
 global function ExportWaveAsCode(wave: Wave, fileName: cstring): boolean <cimport,nodecl> end
+
+-- Wave/Sound management functions
 global function PlaySound(sound: Sound): void <cimport,nodecl> end
 global function StopSound(sound: Sound): void <cimport,nodecl> end
 global function PauseSound(sound: Sound): void <cimport,nodecl> end
@@ -1077,6 +1297,8 @@ global function WaveCopy(wave: Wave): Wave <cimport,nodecl> end
 global function WaveCrop(wave: *Wave, initSample: cint, finalSample: cint): void <cimport,nodecl> end
 global function LoadWaveSamples(wave: Wave): *float32 <cimport,nodecl> end
 global function UnloadWaveSamples(samples: *float32): void <cimport,nodecl> end
+
+--  Music management functions
 global function LoadMusicStream(fileName: cstring): Music <cimport,nodecl> end
 global function LoadMusicStreamFromMemory(fileType: cstring, data: *cuchar, dataSize: cint): Music <cimport,nodecl> end
 global function UnloadMusicStream(music: Music): void <cimport,nodecl> end
@@ -1086,13 +1308,15 @@ global function UpdateMusicStream(music: Music): void <cimport,nodecl> end
 global function StopMusicStream(music: Music): void <cimport,nodecl> end
 global function PauseMusicStream(music: Music): void <cimport,nodecl> end
 global function ResumeMusicStream(music: Music): void <cimport,nodecl> end
+global function SeekMusicStream(music: Music, position: float32): void <cimport, nodecl> end
 global function SetMusicVolume(music: Music, volume: float32): void <cimport,nodecl> end
 global function SetMusicPitch(music: Music, pitch: float32): void <cimport,nodecl> end
 global function GetMusicTimeLength(music: Music): float32 <cimport,nodecl> end
 global function GetMusicTimePlayed(music: Music): float32 <cimport,nodecl> end
-global function InitAudioStream(sampleRate: cuint, sampleSize: cuint, channels: cuint): AudioStream <cimport,nodecl> end
+
+-- AudioStream management functions
+global function LoadAudioStream(sampleRate: cuint, sampleSize: cuint, channels: cuint): AudioStream <cimport, nodecl> end
 global function UpdateAudioStream(stream: AudioStream, data: pointer, samplesCount: cint): void <cimport,nodecl> end
-global function CloseAudioStream(stream: AudioStream): void <cimport,nodecl> end
 global function IsAudioStreamProcessed(stream: AudioStream): boolean <cimport,nodecl> end
 global function PlayAudioStream(stream: AudioStream): void <cimport,nodecl> end
 global function PauseAudioStream(stream: AudioStream): void <cimport,nodecl> end
@@ -1106,6 +1330,7 @@ global function SetAudioStreamBufferSizeDefault(size: cint): void <cimport,nodec
 global PI: float32 <comptime> = 3.14159265358979323846
 global DEG2RAD: float32 <cimport,nodecl,const>
 global RAD2DEG: float32 <cimport,nodecl,const>
+
 global LIGHTGRAY: Color <cimport,nodecl,const>
 global GRAY: Color <cimport,nodecl,const>
 global DARKGRAY: Color <cimport,nodecl,const>
@@ -1126,6 +1351,7 @@ global VIOLET: Color <cimport,nodecl,const>
 global BEIGE: Color <cimport,nodecl,const>
 global BROWN: Color <cimport,nodecl,const>
 global DARKBROWN: Color <cimport,nodecl,const>
+
 global WHITE: Color <cimport,nodecl,const>
 global BLACK: Color <cimport,nodecl,const>
 global BLANK: Color <cimport,nodecl,const>

@@ -1,11 +1,6 @@
 # nelua-raylib
 [Raylib](https://github.com/raysan5/raylib/) bindings for the [Nelua](https://github.com/edubart/nelua-lang) programming language.
 
-## Special Thanks
-- [Eduardo Bart](https://github.com/edubart/)
-    - for creating nelua-decl which is used for generating 95% of the bindings.   
-    - for creating the nelua programming langauge.
-
 ## Pre requisite
 - You should have ``raylib.h`` and ``libraylib`` in the current working directory or in your environment's PATH variable, which you can download from the [raylib repository](https://github.com/raysan5/raylib/releases/tag/3.7.0).
 
