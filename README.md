@@ -2,11 +2,11 @@
 [Raylib](https://github.com/raysan5/raylib/) bindings for the [Nelua](https://github.com/edubart/nelua-lang) programming language.
 
 ## Pre requisite
-- You should have ``raylib.h`` and ``libraylib`` in the current working directory or in your environment's PATH variable, which you can download from the [raylib repository](https://github.com/raysan5/raylib/releases/tag/3.7.0).
+- You should have ``raylib.h`` and ``libraylib`` in the current working directory or in your environment's PATH variable, which you can download from the [raylib repository](https://github.com/raysan5/raylib/releases/tag/4.0.0).
 
 ## Getting Started
 - Copy paste the ``raylib.nelua`` file in the current working directory.
-- Create a ``main.nelua`` file and copy the code given in the [example section](https://github.com/AKDev21/nelua-glfw#example).
+- Create a ``main.nelua`` file and copy the code given in the [example section](#example).
 - Open a command prompt or terminal and run the following command.
 ```
 nelua main.nelua --cflags=" -I . -L . "
