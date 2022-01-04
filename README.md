@@ -9,7 +9,7 @@
 - Create a ``main.nelua`` file and copy the code given in the [example section](#example).
 - Open a command prompt or terminal and run the following command.
 ```
-nelua main.nelua --cflags=" -I . -L . "
+nelua main.nelua --cflags="-L ."
 ```
 
 ## Example
