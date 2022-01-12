@@ -18,8 +18,8 @@ require "raylib"
 
 -- Initialization
 --------------------------------------------------------------------------------------
-local screenWidth <comptime> = 800
-local screenHeight <comptime> = 450
+local screenWidth: uint16 <comptime> = 800
+local screenHeight: uint16 <comptime> = 450
 
 InitWindow(screenWidth,screenHeight, "raylib-nelua [core] example - basic window")
 
@@ -53,7 +53,6 @@ end
 -------------------------------------------------------------------------------------
 CloseWindow()       -- Close window and OpenGL context
 -------------------------------------------------------------------------------------
-
 ```
 
 ## Contact

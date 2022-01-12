@@ -1,8 +1,17 @@
 ##[[
 cinclude "raylib.h"
 
-if not ccinfo.is_emscripten then
-        linklib "raylib"
+if ccinfo.is_emscripten then
+    if ccinfo.is_windows then
+        -- TODO: add configuration of windows
+    elseif ccinfo.is_macos then
+        -- TODO: add configuration of macos 
+    else
+        cflags "-Os -Wall -I/usr/include/raylib.h -s USE_GLFW=3 -DPLATFORM_WEB --shell-file /usr/share/emscripten/src/shell.html"
+    end
+else
+    -- NOTE: Raylib should always be linked first
+    linklib "raylib"
     if ccinfo.is_windows then
         linklib "opengl32"
         linklib "gdi32"
@@ -25,8 +34,6 @@ if not ccinfo.is_emscripten then
         linklib "pthread"
         linklib "m"
     end
-else
-    cflags "-Os -Wall -I/usr/include/raylib.h -s USE_GLFW=3 -DPLATFORM_WEB --shell-file /usr/share/emscripten/src/shell.html"
 end
 ]]
 
