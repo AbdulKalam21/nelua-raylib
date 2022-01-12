@@ -1,28 +1,33 @@
 ##[[
-    linklib "raylib"
-if ccinfo.is_windows then
-    linklib "opengl32"
-    linklib "gdi32"
-    linklib "winmm"
-    linklib "pthread"
-    cflags  "-static"
+cinclude "raylib.h"
+
+if not ccinfo.is_emscripten then
+        linklib "raylib"
+    if ccinfo.is_windows then
+        linklib "opengl32"
+        linklib "gdi32"
+        linklib "winmm"
+        linklib "pthread"
+        cflags  "-static"
+    end
+    if ccinfo.is_linux or ccinfo.is_gnu_linux then
+        linklib "GL"
+        linklib "m"
+        linklib "dl"
+        linklib "rt"
+        linklib "X11"
+    end
+    if ccinfo.is_macos then
+        cflags "-framework OpenGL -framework Cocoa -framework IOKit -framework CoreAudio -framework CoreVideo"
+    end
+    if ccinfo.is_freebsd or ccinfo.is_netbsd or ccinfo.is_openbsd or ccinfo.is_bsd then
+        linklib "GL"
+        linklib "pthread"
+        linklib "m"
+    end
+else
+    cflags "-Os -Wall -I/usr/include/raylib.h -s USE_GLFW=3 -DPLATFORM_WEB --shell-file /usr/share/emscripten/src/shell.html"
 end
-if ccinfo.is_linux or ccinfo.is_gnu_linux then
-    linklib "GL"
-    linklib "m"
-    linklib "dl"
-    linklib "rt"
-    linklib "X11"
-end
-if ccinfo.is_macos then
-    cflags "-framework OpenGL -framework Cocoa -framework IOKit -framework CoreAudio -framework CoreVideo"
-end
-if ccinfo.is_freebsd or ccinfo.is_netbsd or ccinfo.is_openbsd or ccinfo.is_bsd then
-    linklib "GL"
-    linklib "pthread"
-    linklib "m"
-end
-    cinclude"raylib.h"
 ]]
 
 ------------------------------------------------------------------------------------
