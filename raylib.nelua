@@ -7,6 +7,7 @@ if ccinfo.is_emscripten then
     elseif ccinfo.is_macos then
         -- TODO: add configuration of macos 
     else
+        -- TODO: not make this user specific
         cflags "-Os -Wall -I/usr/include/raylib.h -s USE_GLFW=3 -DPLATFORM_WEB --shell-file /usr/share/emscripten/src/shell.html"
     end
 else
@@ -17,7 +18,6 @@ else
         linklib "gdi32"
         linklib "winmm"
         linklib "pthread"
-        cflags  "-static"
     end
     if ccinfo.is_linux or ccinfo.is_gnu_linux then
         linklib "GL"
@@ -25,6 +25,7 @@ else
         linklib "dl"
         linklib "rt"
         linklib "X11"
+        linklib "pthread"
     end
     if ccinfo.is_macos then
         cflags "-framework OpenGL -framework Cocoa -framework IOKit -framework CoreAudio -framework CoreVideo"
